@@ -13,7 +13,8 @@ body{margin:0;font-family:Arial;background:#f6fff8}
 h2{text-align:center}
 
 input,select{
-width:100%;padding:12px;margin-top:10px;
+width:70%;
+padding:12px;margin-top:10px;
 border-radius:10px;border:1px solid #ccc
 }
 
@@ -59,7 +60,14 @@ z-index:10;
 text-align:center;
 animation:pop .5s ease;
 }
-.thank-card img{height:80px;margin-bottom:15px}
+.thank-card img{
+height:80px;
+margin-bottom:15px;
+display:block;
+margin-left:auto;
+margin-right:auto;
+}
+
 @keyframes pop{
 from{transform:scale(0.8);opacity:0}
 to{transform:scale(1);opacity:1}
@@ -149,12 +157,19 @@ to{transform:scale(1);opacity:1}
 </select>
 <div class="error" id="typeErr"></div>
 
-<input id="pqty" type="number" min="1" max="10" step="1" placeholder="Quantity (Kg)">
+<input type="date" id="pdate">
+<br>
+
+<input id="pqty" type="number" min="1" max="10" step="1" placeholder="Quantity">
+<span><b> Kg</b></span>
 <div class="error" id="qtyErr"></div>
 
 <p><b>Final Price:</b> ₹<span id="price">0</span></p>
 
 <p><b>Payment:</b> CASH / UPI on delivery</p>
+
+<p><b>Instructions:</b>  
+Please ensure someone is available at delivery location.</p>
 
 <button class="btn" id="psubmit">Confirm Preorder</button>
 <button class="btn back" onclick="goBack()">⬅ Back</button>
@@ -173,7 +188,7 @@ to{transform:scale(1);opacity:1}
 
 <script>
 let ratings={},historyStack=["f1"];
-const RATE_PER_KG=60; // change price here
+const RATE_PER_KG=60;
 
 pqty.oninput=()=>{
 if(pqty.value>=1 && pqty.value<=10){
@@ -231,7 +246,6 @@ navigate("choice");
 });
 };
 
-/* PREORDER */
 psubmit.onclick=()=>{
 let ok=true;
 if(!pcity.value){cityErr.innerText="Required";ok=false}else cityErr.innerText="";
@@ -246,13 +260,12 @@ if(!ok)return;
 showThanks(
 "Thank you!",
 "Direct from Farm<br>Support farm, Support rural economy",
-false,
+true,
 4000,
 ()=>{navigate("choice");}
 );
 };
 
-/* THANK YOU */
 function showThanks(title,sub,showLogo,time,cb){
 thankText.innerHTML=title;
 thankSub.innerHTML=sub;
@@ -264,7 +277,6 @@ cb();
 },time);
 }
 
-/* NAV */
 function show(id){
 document.querySelectorAll(".screen")
 .forEach(x=>x.classList.remove("active"));
