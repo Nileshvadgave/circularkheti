@@ -115,6 +115,21 @@ display:block;margin:auto;
 from{transform:scale(0.8);opacity:0}
 to{transform:scale(1);opacity:1}
 }
+
+/* NEW: center logo block */
+.know-block{
+text-align:center;
+margin:40px 0;
+cursor:pointer;
+}
+.know-block img{
+height:80px;
+}
+.know-block p{
+margin-top:8px;
+font-weight:bold;
+color:#2e7d32;
+}
 </style>
 </head>
 
@@ -168,6 +183,12 @@ placeholder="Comment / Suggestion (max 50 letters)"></textarea>
 <div class="tabs">
 <div class="tab active" onclick="shareLink()">Share</div>
 <div class="tab" onclick="goPreorder()">Order Now!</div>
+</div>
+
+<!-- NEW CENTER LOGO BLOCK -->
+<div class="know-block" onclick="openKnow()">
+<img src="CK logo.png.jpg">
+<p>Know more</p>
 </div>
 
 <!-- URL BOX KEPT BUT HIDDEN -->
@@ -275,6 +296,11 @@ alert("Link copied!");
 }
 function goPreorder(){
 navigate("p1");
+}
+
+/* KNOW MORE */
+function openKnow(){
+window.location.href="https://YOUR-URL-HERE";
 }
 
 /* FOOTER SHOW ON SCROLL */
@@ -388,17 +414,9 @@ cb();
 
 function openShare(){}
 function openPreorder(){}
-
 function copy(){}
 function goInfo(){navigate("info")}
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
