@@ -11,8 +11,8 @@ body{
 margin:0;
 font-family:Arial;
 background:url('background_farmer_CK1.png') no-repeat center center fixed;
-background-size:cover;  /* CHANGE 1 */
-overflow-x:hidden;      /* CHANGE 2 */
+background-size:cover;
+overflow-x:hidden;
 }
 
 /* overlay for opacity */
@@ -41,7 +41,7 @@ padding:12px;
 margin-top:10px;
 border-radius:10px;
 border:1px solid #ccc;
-font-size:16px; /* prevent zoom */
+font-size:16px;
 }
 
 textarea{resize:none}
@@ -67,16 +67,14 @@ background:#e8f5e9;border-radius:10px
 }
 .tab.active{background:#4CAF50;color:white}
 
-/* small logo on every screen */
+/* small logo */
 .top-logo{
 position:fixed;
 top:8px;
 right:10px;
 z-index:20;
 }
-.top-logo img{
-height:32px;
-}
+.top-logo img{height:32px}
 
 /* footer */
 .footer{
@@ -84,12 +82,10 @@ position:fixed;
 bottom:10px;
 width:100%;
 text-align:center;
-opacity:0;             /* CHANGE 3 */
+opacity:0;
 transition:0.4s;
 }
-.footer.show{
-opacity:1;
-}
+.footer.show{opacity:1;}
 .footer img{height:35px}
 
 /* THANK YOU */
@@ -103,16 +99,10 @@ justify-content:center;
 align-items:center;
 z-index:30;
 }
-.thank-card{
-text-align:center;
-animation:pop .5s ease;
-}
+.thank-card{text-align:center;animation:pop .5s ease;}
 .thank-card img{
-height:80px;
-margin-bottom:15px;
-display:block;
-margin-left:auto;
-margin-right:auto;
+height:80px;margin-bottom:15px;
+display:block;margin:auto;
 }
 @keyframes pop{
 from{transform:scale(0.8);opacity:0}
@@ -246,8 +236,9 @@ placeholder="Comment / Suggestion (max 50 letters)"></textarea>
 </div>
 
 <script>
+
 /* START FROM TOP */
-window.onload=()=>window.scrollTo(0,0); /* CHANGE 4 */
+window.onload=()=>window.scrollTo(0,0);
 
 /* FOOTER SHOW ON SCROLL */
 window.addEventListener("scroll",()=>{
@@ -265,12 +256,14 @@ if(scrolled>=height-100){
 let ratings={},historyStack=["f1"];
 const RATE_PER_KG=60;
 
+/* PRICE */
 pqty.oninput=()=>{
-if(pqty.value>=1 && pqty.value<=10){
+if(pqty.value>=1 && pqty.value<=25){
 price.innerText=pqty.value*RATE_PER_KG;
 }else price.innerText=0;
 };
 
+/* STARS */
 function createStars(id){
 let d=document.getElementById(id);
 for(let i=1;i<=5;i++){
@@ -287,6 +280,7 @@ for(let i=1;i<=5;i++){
 }
 ["taste","soft","overall"].forEach(createStars);
 
+/* VALIDATION */
 fname.oninput=fmobile.oninput=validateFeedback;
 
 function validateFeedback(){
@@ -307,9 +301,85 @@ if(!ratings.taste||!ratings.soft||!ratings.overall){
 fsubmit.disabled=!ok;
 }
 
-/* remaining JS unchanged */
+/* FEEDBACK SUBMIT */
+fsubmit.onclick=()=>{
+showThanks(
+"Thank you for feedback",
+"",
+true,
+2000,
+()=>{
+pname.value=fname.value;
+pmobile.value=fmobile.value;
+link.value=location.href;
+navigate("choice");
+});
+};
+
+/* PREORDER */
+psubmit.onclick=()=>{
+let ok=true;
+if(!pcity.value){cityErr.innerText="Required";ok=false}else cityErr.innerText="";
+if(!pplace.value){placeErr.innerText="Required";ok=false}else placeErr.innerText="";
+if(!ptype.value){typeErr.innerText="Required";ok=false}else typeErr.innerText="";
+if(!pqty.value || pqty.value<1 || pqty.value>25){
+ qtyErr.innerText="Enter 1–25 Kg";ok=false;
+}else qtyErr.innerText="";
+
+if(!ok)return;
+
+showThanks(
+"Thank you!",
+"Direct from Farm<br>Support farm, Support rural economy",
+true,
+4000,
+()=>{navigate("choice");}
+);
+};
+
+/* THANK YOU */
+function showThanks(title,sub,showLogo,time,cb){
+thankText.innerHTML=title;
+thankSub.innerHTML=sub;
+thankLogo.style.display=showLogo?"block":"none";
+thanks.style.display="flex";
+setTimeout(()=>{
+thanks.style.display="none";
+cb();
+},time);
+}
+
+/* NAV */
+function show(id){
+document.querySelectorAll(".screen")
+.forEach(x=>x.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+}
+function navigate(id){historyStack.push(id);show(id)}
+function goBack(){
+if(historyStack.length>1){
+historyStack.pop();
+show(historyStack[historyStack.length-1]);
+}
+}
+
+function openShare(){setTab(0);navigate("choice")}
+function openPreorder(){setTab(1);navigate("p1")}
+
+function setTab(i){
+document.querySelectorAll(".tab")
+.forEach(x=>x.classList.remove("active"));
+document.querySelectorAll(".tab")[i]
+.classList.add("active");
+}
+
+function copy(){
+navigator.clipboard.writeText(link.value);
+alert("Link copied!");
+}
+
+function goInfo(){navigate("info")}
 </script>
 
 </body>
 </html>
-
