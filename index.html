@@ -28,7 +28,7 @@ z-index:-1;
 .screen{
 display:none;
 padding:20px;
-padding-bottom:90px;
+padding-bottom:130px; /* CHANGE 4 */
 min-height:100vh;
 }
 .active{display:block}
@@ -57,7 +57,14 @@ font-size:16px;margin-top:15px
 
 .btn.back{background:#757575}
 
-.star span{font-size:28px;color:#ccc;cursor:pointer}
+/* CHANGE 1 */
+.star span{
+font-size:28px;
+color:#ccc;
+cursor:pointer;
+-webkit-text-stroke:1px #000;
+text-stroke:1px #000;
+}
 .star .on{color:#fbc02d}
 
 .tabs{display:flex;gap:10px;margin-top:20px}
@@ -203,7 +210,11 @@ placeholder="Comment / Suggestion (max 50 letters)"></textarea>
 </select>
 <div class="error" id="typeErr"></div>
 
-<input type="date" id="pdate"><br>
+<!-- CHANGE 3 -->
+<input type="text" id="pdate"
+onclick="this.type='date'"
+onblur="if(!this.value)this.type='text'"
+placeholder="Select date of delivery"><br>
 
 <input id="pqty" type="number" min="1" max="25" step="1" placeholder="Quantity">
 <b> Kg</b>
@@ -241,7 +252,6 @@ placeholder="Comment / Suggestion (max 50 letters)"></textarea>
 window.addEventListener("pageshow",()=>{
   setTimeout(()=>window.scrollTo(0,0),300);
 });
-
 
 /* FOOTER SHOW ON SCROLL */
 window.addEventListener("scroll",()=>{
@@ -293,8 +303,10 @@ if(fname.value.length<3 || /\d/.test(fname.value)){
  nameErr.innerText="Enter valid name"; ok=false;
 }else nameErr.innerText="";
 
-if(!/^[6-9]\d{9}$/.test(fmobile.value)){
- mobErr.innerText="Enter valid 10-digit mobile"; ok=false;
+/* CHANGE 2 */
+if(!/^\d{10}$/.test(fmobile.value)){
+ mobErr.innerText="Mobile must be exactly 10 digits";
+ ok=false;
 }else mobErr.innerText="";
 
 if(!ratings.taste||!ratings.soft||!ratings.overall){
@@ -386,4 +398,3 @@ function goInfo(){navigate("info")}
 
 </body>
 </html>
-
