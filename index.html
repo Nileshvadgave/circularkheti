@@ -19,7 +19,7 @@ body::before{
 content:"";
 position:fixed;
 top:0;left:0;
-width:100%;height:100%;
+width:50%;height:50%;
 background:rgba(246,255,248,0.92);
 z-index:-1;
 }
@@ -27,17 +27,20 @@ z-index:-1;
 .screen{
 display:none;
 padding:20px;
+padding-bottom:90px; /* FIX footer overlap */
 min-height:100vh;
 }
 .active{display:block}
 
 h2{text-align:center}
 
-input,select{
+input,select,textarea{
 width:70%;
 padding:12px;margin-top:10px;
 border-radius:10px;border:1px solid #ccc
 }
+
+textarea{resize:none}
 
 .error{color:red;font-size:13px}
 
@@ -127,7 +130,7 @@ to{transform:scale(1);opacity:1}
 <!-- FEEDBACK -->
 <div class="screen active" id="f1">
 <h2>Thank you tasting fresh guavas/पेरू/अमरूद from CircularKheti Farms</h2>
-<h2>Help us know your experience</h2>
+<h2>Help us grow with your experience</h2>
 <h1>Feedback</h1>
 
 <input id="fname" placeholder="Your Name">
@@ -136,10 +139,14 @@ to{transform:scale(1);opacity:1}
 <input id="fmobile" placeholder="WhatsApp Number">
 <div class="error" id="mobErr"></div>
 
-<h3>Taste *</h3><div class="star" id="taste"></div>
-<h3>Softness *</h3><div class="star" id="soft"></div>
-<h3>Overall *</h3><div class="star" id="overall"></div>
+<h3>Taste of guava *</h3><div class="star" id="taste"></div>
+<h3>Softness of guava *</h3><div class="star" id="soft"></div>
+<h3>Overall order experience *</h3><div class="star" id="overall"></div>
 <div class="error" id="rateErr"></div>
+
+<!-- NEW COMMENT -->
+<textarea id="fcomment" maxlength="50"
+placeholder="Comment / Suggestion (max 50 letters)"></textarea>
 
 <button class="btn" id="fsubmit" disabled>Submit</button>
 
@@ -158,7 +165,7 @@ to{transform:scale(1);opacity:1}
 </div>
 
 <div id="share">
-<input id="link">
+<input id="link" readonly> <!-- LOCKED -->
 <button class="btn" onclick="copy()">Copy Link</button>
 </div>
 
@@ -208,8 +215,12 @@ to{transform:scale(1);opacity:1}
 <p><b>Payment:</b> CASH / UPI on delivery</p>
 
 <p><b>Instructions:</b>  
-Please caary your cloth bag.
+Please carry your own cloth bag.
 Contact person: Sameer or Nilesh.</p>
+
+<!-- NEW COMMENT -->
+<textarea id="pcomment" maxlength="50"
+placeholder="Comment / Suggestion (max 50 letters)"></textarea>
 
 <button class="btn" id="psubmit">Confirm Preorder</button>
 <button class="btn back" onclick="goBack()">⬅ Back</button>
@@ -350,4 +361,3 @@ function goInfo(){navigate("info")}
 
 </body>
 </html>
-
