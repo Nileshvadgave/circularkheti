@@ -238,7 +238,10 @@ placeholder="Comment / Suggestion (max 50 letters)"></textarea>
 <script>
 
 /* START FROM TOP */
-window.onload=()=>window.scrollTo(0,0);
+window.addEventListener("pageshow",()=>{
+  setTimeout(()=>window.scrollTo(0,0),300);
+});
+
 
 /* FOOTER SHOW ON SCROLL */
 window.addEventListener("scroll",()=>{
@@ -383,3 +386,4 @@ function goInfo(){navigate("info")}
 
 </body>
 </html>
+
