@@ -45,7 +45,7 @@ text-align:center
 .footer img{height:35px}
 .lock{background:#eee}
 
-/* THANK YOU ANIMATION */
+/* THANK YOU */
 #thanks{
 position:fixed;top:0;left:0;
 width:100%;height:100%;
@@ -59,6 +59,7 @@ z-index:10;
 text-align:center;
 animation:pop .5s ease;
 }
+.thank-card img{height:80px;margin-bottom:15px}
 @keyframes pop{
 from{transform:scale(0.8);opacity:0}
 to{transform:scale(1);opacity:1}
@@ -71,6 +72,7 @@ to{transform:scale(1);opacity:1}
 <!-- THANK YOU -->
 <div id="thanks">
 <div class="thank-card">
+<img src="CK logo.png.jpg" id="thankLogo">
 <h2 id="thankText">Thank you!</h2>
 <p id="thankSub"></p>
 </div>
@@ -121,8 +123,8 @@ to{transform:scale(1);opacity:1}
 <div class="screen" id="p1">
 <h2>Preorder</h2>
 
-<input id="pname" class="lock">
-<input id="pmobile" class="lock">
+<input id="pname" placeholder="Your Name">
+<input id="pmobile" placeholder="Mobile Number">
 
 <select id="pcity">
 <option value="">City *</option>
@@ -150,6 +152,8 @@ to{transform:scale(1);opacity:1}
 <input id="pqty" type="number" min="1" max="10" step="1" placeholder="Quantity (Kg)">
 <div class="error" id="qtyErr"></div>
 
+<p><b>Final Price:</b> ₹<span id="price">0</span></p>
+
 <p><b>Payment:</b> CASH / UPI on delivery</p>
 
 <button class="btn" id="psubmit">Confirm Preorder</button>
@@ -169,6 +173,13 @@ to{transform:scale(1);opacity:1}
 
 <script>
 let ratings={},historyStack=["f1"];
+const RATE_PER_KG=60; // change price here
+
+pqty.oninput=()=>{
+if(pqty.value>=1 && pqty.value<=10){
+price.innerText=pqty.value*RATE_PER_KG;
+}else price.innerText=0;
+};
 
 function createStars(id){
 let d=document.getElementById(id);
@@ -186,102 +197,74 @@ for(let i=1;i<=5;i++){
 }
 ["taste","soft","overall"].forEach(createStars);
 
-/* VALIDATION */
-
 fname.oninput=fmobile.oninput=validateFeedback;
 
 function validateFeedback(){
 let ok=true;
 
-/* Name */
 if(fname.value.length<3 || /\d/.test(fname.value)){
- nameErr.innerText="Enter valid name";
- ok=false;
+ nameErr.innerText="Enter valid name"; ok=false;
 }else nameErr.innerText="";
 
-/* Mobile */
 if(!/^[6-9]\d{9}$/.test(fmobile.value)){
- mobErr.innerText="Enter valid 10-digit mobile";
- ok=false;
+ mobErr.innerText="Enter valid 10-digit mobile"; ok=false;
 }else mobErr.innerText="";
 
-/* Ratings */
 if(!ratings.taste||!ratings.soft||!ratings.overall){
- rateErr.innerText="Please rate all fields";
- ok=false;
+ rateErr.innerText="Please rate all fields"; ok=false;
 }else rateErr.innerText="";
 
 fsubmit.disabled=!ok;
 }
 
 fsubmit.onclick=()=>{
-showThanks("Thank you for feedback","",()=>{
-saveLocal("feedback",{
- name:fname.value.trim(),
- mobile:fmobile.value,
- ratings,
- time:new Date().toISOString()
-});
+showThanks(
+"Thank you for feedback",
+"",
+true,
+2000,
+()=>{
 pname.value=fname.value;
 pmobile.value=fmobile.value;
-pname.readOnly=true;
-pmobile.readOnly=true;
 link.value=location.href;
 navigate("choice");
 });
 };
 
-/* PREORDER VALIDATION */
+/* PREORDER */
 psubmit.onclick=()=>{
 let ok=true;
-if(!pcity.value){cityErr.innerText="Required";ok=false}
-else cityErr.innerText="";
-if(!pplace.value){placeErr.innerText="Required";ok=false}
-else placeErr.innerText="";
-if(!ptype.value){typeErr.innerText="Required";ok=false}
-else typeErr.innerText="";
+if(!pcity.value){cityErr.innerText="Required";ok=false}else cityErr.innerText="";
+if(!pplace.value){placeErr.innerText="Required";ok=false}else placeErr.innerText="";
+if(!ptype.value){typeErr.innerText="Required";ok=false}else typeErr.innerText="";
 if(!pqty.value || pqty.value<1 || pqty.value>10){
- qtyErr.innerText="Enter quantity 1–10 Kg";ok=false;
+ qtyErr.innerText="Enter 1–10 Kg";ok=false;
 }else qtyErr.innerText="";
 
 if(!ok)return;
 
-saveLocal("preorder",{
- name:pname.value,
- mobile:pmobile.value,
- city:pcity.value,
- place:pplace.value,
- type:ptype.value,
- qty:pqty.value,
- time:new Date().toISOString()
-});
-
 showThanks(
 "Thank you!",
-"Direct from Farm/(खेत)/शेत <br>Support farmer/किसान/ शेतकरी, Support rural economy",
+"Direct from Farm<br>Support farm, Support rural economy",
+false,
+4000,
 ()=>{navigate("choice");}
 );
 };
 
-/* THANK YOU HANDLER */
-function showThanks(title,sub,cb){
+/* THANK YOU */
+function showThanks(title,sub,showLogo,time,cb){
 thankText.innerHTML=title;
 thankSub.innerHTML=sub;
+thankLogo.style.display=showLogo?"block":"none";
 thanks.style.display="flex";
 setTimeout(()=>{
 thanks.style.display="none";
 cb();
-},2000);
+},time);
 }
 
-/* STORAGE */
-function saveLocal(k,d){
-let arr=JSON.parse(localStorage.getItem(k)||"[]");
-arr.push(d);
-localStorage.setItem(k,JSON.stringify(arr));
-}
-
-/* NAVIGATION */
+/* NAV */
 function show(id){
 document.querySelectorAll(".screen")
 .forEach(x=>x.classList.remove("active"));
