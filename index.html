@@ -44,15 +44,36 @@ text-align:center
 }
 .footer img{height:35px}
 .lock{background:#eee}
+
+/* THANK YOU ANIMATION */
+#thanks{
+position:fixed;top:0;left:0;
+width:100%;height:100%;
+background:#fff;
+display:none;
+justify-content:center;
+align-items:center;
+z-index:10;
+}
+.thank-card{
+text-align:center;
+animation:pop .5s ease;
+}
+@keyframes pop{
+from{transform:scale(0.8);opacity:0}
+to{transform:scale(1);opacity:1}
+}
 </style>
 </head>
 
 <body>
 
 <!-- THANK YOU -->
-<div id="thanks" class="screen">
-<h2>✅ Success</h2>
-<p style="text-align:center">Saved successfully</p>
+<div id="thanks">
+<div class="thank-card">
+<h2 id="thankText">Thank you!</h2>
+<p id="thankSub"></p>
+</div>
 </div>
 
 <!-- FEEDBACK -->
@@ -91,8 +112,6 @@ text-align:center
 <button class="btn" onclick="copy()">Copy Link</button>
 </div>
 
-<button class="btn back" onclick="goBack()">⬅ Back</button>
-
 <div class="footer">
 <img src="CK logo.png.jpg" onclick="goInfo()">
 </div>
@@ -124,8 +143,12 @@ text-align:center
 <option value="">Ripening *</option>
 <option>Half Ripen</option>
 <option>Fully Ripen</option>
+<option>Mix</option>
 </select>
 <div class="error" id="typeErr"></div>
+
+<input id="pqty" type="number" min="1" max="10" step="1" placeholder="Quantity (Kg)">
+<div class="error" id="qtyErr"></div>
 
 <p><b>Payment:</b> CASH / UPI on delivery</p>
 
@@ -192,6 +215,7 @@ fsubmit.disabled=!ok;
 }
 
 fsubmit.onclick=()=>{
+showThanks("Thank you for feedback","",()=>{
 saveLocal("feedback",{
  name:fname.value.trim(),
  mobile:fmobile.value,
@@ -204,6 +228,7 @@ pname.readOnly=true;
 pmobile.readOnly=true;
 link.value=location.href;
 navigate("choice");
+});
 };
 
 /* PREORDER VALIDATION */
@@ -215,6 +240,9 @@ if(!pplace.value){placeErr.innerText="Required";ok=false}
 else placeErr.innerText="";
 if(!ptype.value){typeErr.innerText="Required";ok=false}
 else typeErr.innerText="";
+if(!pqty.value || pqty.value<1 || pqty.value>10){
+ qtyErr.innerText="Enter quantity 1–10 Kg";ok=false;
+}else qtyErr.innerText="";
 
 if(!ok)return;
 
@@ -224,10 +252,27 @@ saveLocal("preorder",{
  city:pcity.value,
  place:pplace.value,
  type:ptype.value,
+ qty:pqty.value,
  time:new Date().toISOString()
 });
-alert("Preorder saved successfully");
+
+showThanks(
+"Thank you!",
+"Direct from Farm/(खेत)/शेत <br>Support farmer/किसान/ शेतकरी, Support rural economy",
+()=>{navigate("choice");}
+);
 };
+
+/* THANK YOU HANDLER */
+function showThanks(title,sub,cb){
+thankText.innerHTML=title;
+thankSub.innerHTML=sub;
+thanks.style.display="flex";
+setTimeout(()=>{
+thanks.style.display="none";
+cb();
+},2000);
+}
 
 /* STORAGE */
 function saveLocal(k,d){
@@ -270,4 +315,3 @@ function goInfo(){navigate("info")}
 
 </body>
 </html>
-
