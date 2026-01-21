@@ -28,7 +28,7 @@ z-index:-1;
 .screen{
 display:none;
 padding:20px;
-padding-bottom:130px; /* CHANGE 4 */
+padding-bottom:130px;
 min-height:100vh;
 }
 .active{display:block}
@@ -57,20 +57,20 @@ font-size:16px;margin-top:15px
 
 .btn.back{background:#757575}
 
-/* CHANGE 1 */
+/* stars */
 .star span{
 font-size:28px;
 color:#ccc;
 cursor:pointer;
 -webkit-text-stroke:1px #000;
-text-stroke:1px #000;
 }
 .star .on{color:#fbc02d}
 
 .tabs{display:flex;gap:10px;margin-top:20px}
 .tab{
 flex:1;text-align:center;padding:12px;
-background:#e8f5e9;border-radius:10px
+background:#e8f5e9;border-radius:10px;
+cursor:pointer;
 }
 .tab.active{background:#4CAF50;color:white}
 
@@ -146,9 +146,9 @@ to{transform:scale(1);opacity:1}
 <input id="fmobile" placeholder="WhatsApp Number">
 <div class="error" id="mobErr"></div>
 
-<h3>Taste of guava *</h3><div class="star" id="taste"></div>
-<h3>Softness of guava *</h3><div class="star" id="soft"></div>
-<h3>Overall order experience *</h3><div class="star" id="overall"></div>
+<h3>Taste *</h3><div class="star" id="taste"></div>
+<h3>Softness *</h3><div class="star" id="soft"></div>
+<h3>Overall *</h3><div class="star" id="overall"></div>
 <div class="error" id="rateErr"></div>
 
 <textarea id="fcomment" maxlength="50"
@@ -161,18 +161,19 @@ placeholder="Comment / Suggestion (max 50 letters)"></textarea>
 </div>
 </div>
 
-<!-- CHOICE -->
+<!-- NEXT STEP -->
 <div class="screen" id="choice">
 <h2>Next Step</h2>
 
 <div class="tabs">
-<div class="tab active" onclick="openShare()">Share</div>
-<div class="tab" onclick="openPreorder()">Preorder</div>
+<div class="tab active" onclick="shareLink()">Share</div>
+<div class="tab" onclick="goPreorder()">Preorder</div>
 </div>
 
-<div id="share">
+<!-- URL BOX KEPT BUT HIDDEN -->
+<div id="share" style="display:none">
 <input id="link" readonly>
-<button class="btn" onclick="copy()">Copy Link</button>
+<button class="btn">Copy Link</button>
 </div>
 
 <div class="footer">
@@ -203,14 +204,13 @@ placeholder="Comment / Suggestion (max 50 letters)"></textarea>
 <div class="error" id="placeErr"></div>
 
 <select id="ptype">
-<option value="">Type of Guava *</option>
+<option value="">Type *</option>
 <option>Half Ripen</option>
 <option>Fully Ripen</option>
 <option>Mix</option>
 </select>
 <div class="error" id="typeErr"></div>
 
-<!-- CHANGE 3 -->
 <input type="text" id="pdate"
 onclick="this.type='date'"
 onblur="if(!this.value)this.type='text'"
@@ -242,16 +242,40 @@ placeholder="Comment / Suggestion (max 50 letters)"></textarea>
 <!-- INFO -->
 <div class="screen" id="info">
 <h2>🌱 About CircularKheti</h2>
-<p>Direct from farme model! Eat fresh Stay healthy!.</p>
+<p>Direct from farmer model! Eat fresh Stay healthy!.</p>
 <button class="btn back" onclick="goBack()">⬅ Back</button>
 </div>
 
 <script>
 
-/* START FROM TOP */
-window.addEventListener("pageshow",()=>{
-  setTimeout(()=>window.scrollTo(0,0),300);
-});
+/* ALWAYS TOP */
+function resetScroll(){
+setTimeout(()=>window.scrollTo(0,0),100);
+}
+
+/* NAV */
+function show(id){
+document.querySelectorAll(".screen")
+.forEach(x=>x.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+resetScroll();
+}
+function navigate(id){historyStack.push(id);show(id)}
+function goBack(){
+if(historyStack.length>1){
+historyStack.pop();
+show(historyStack[historyStack.length-1]);
+}
+}
+
+/* SHARE & PREORDER */
+function shareLink(){
+navigator.clipboard.writeText(location.href);
+alert("Link copied!");
+}
+function goPreorder(){
+navigate("p1");
+}
 
 /* FOOTER SHOW ON SCROLL */
 window.addEventListener("scroll",()=>{
@@ -266,6 +290,7 @@ if(scrolled>=height-100){
 });
 });
 
+/* DATA */
 let ratings={},historyStack=["f1"];
 const RATE_PER_KG=60;
 
@@ -303,10 +328,8 @@ if(fname.value.length<3 || /\d/.test(fname.value)){
  nameErr.innerText="Enter valid name"; ok=false;
 }else nameErr.innerText="";
 
-/* CHANGE 2 */
 if(!/^\d{10}$/.test(fmobile.value)){
- mobErr.innerText="Mobile must be exactly 10 digits";
- ok=false;
+ mobErr.innerText="Enter exactly 10 digits"; ok=false;
 }else mobErr.innerText="";
 
 if(!ratings.taste||!ratings.soft||!ratings.overall){
@@ -326,7 +349,6 @@ true,
 ()=>{
 pname.value=fname.value;
 pmobile.value=fmobile.value;
-link.value=location.href;
 navigate("choice");
 });
 };
@@ -364,35 +386,10 @@ cb();
 },time);
 }
 
-/* NAV */
-function show(id){
-document.querySelectorAll(".screen")
-.forEach(x=>x.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-}
-function navigate(id){historyStack.push(id);show(id)}
-function goBack(){
-if(historyStack.length>1){
-historyStack.pop();
-show(historyStack[historyStack.length-1]);
-}
-}
+function openShare(){}
+function openPreorder(){}
 
-function openShare(){setTab(0);navigate("choice")}
-function openPreorder(){setTab(1);navigate("p1")}
-
-function setTab(i){
-document.querySelectorAll(".tab")
-.forEach(x=>x.classList.remove("active"));
-document.querySelectorAll(".tab")[i]
-.classList.add("active");
-}
-
-function copy(){
-navigator.clipboard.writeText(link.value);
-alert("Link copied!");
-}
-
+function copy(){}
 function goInfo(){navigate("info")}
 </script>
 
