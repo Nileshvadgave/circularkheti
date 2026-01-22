@@ -68,7 +68,7 @@ cursor:pointer;
 
 .tabs{display:flex;gap:10px;margin-top:20px}
 .tab{
-flex:1;text-align:center;padding:12px;
+flex:1;text-align:center;padding:20px;
 background:#e8f5e9;border-radius:10px;
 cursor:pointer;
 }
@@ -178,17 +178,16 @@ placeholder="Comment / Suggestion (max 50 letters)"></textarea>
 
 <!-- NEXT STEP -->
 <div class="screen" id="choice">
-<h2>Next Step</h2>
 
 <div class="tabs">
-<div class="tab active" onclick="shareLink()">Share</div>
 <div class="tab" onclick="goPreorder()">Order Now!</div>
+<div class="tab active" onclick="shareLink()">Share with friends</div>
 </div>
 
 <!-- NEW CENTER LOGO BLOCK -->
 <div class="know-block" onclick="openKnow()">
 <img src="CK logo.png.jpg">
-<p>Know more</p>
+<p>Know your Farmer!!</p>
 </div>
 
 <!-- URL BOX KEPT BUT HIDDEN -->
@@ -393,7 +392,7 @@ if(!ok)return;
 
 showThanks(
 "Thank you!",
-"Direct from Farm<br>Support farm, Support rural economy",
+"Direct from Farm<br>Support farmer, Support rural economy",
 true,
 4000,
 ()=>{navigate("choice");}
@@ -420,5 +419,6 @@ function goInfo(){navigate("info")}
 
 </body>
 </html>
+
 
 
